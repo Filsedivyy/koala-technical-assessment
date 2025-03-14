@@ -6,13 +6,14 @@ export enum ButtonStyle {
 }
 
 interface ButtonProps {
-    children: ReactNode
-    onClick: () => void
-    style: ButtonStyle
-}
+    children: ReactNode;
+    onClick: () => void;
+    style: ButtonStyle;
+    disabled?: boolean
+};
 
 
-const Button: FC<ButtonProps> = ({ children, onClick, style }) => {
+const Button: FC<ButtonProps> = ({ children, onClick, style, disabled }) => {
 
     function getButtonStyle(style: ButtonStyle) {
         switch (style) {
@@ -27,10 +28,10 @@ const Button: FC<ButtonProps> = ({ children, onClick, style }) => {
 
     return (
         <button
-            className={`size-[32px] rounded-[99px] ${getButtonStyle(style)} flex items-center justify-center`}
+            className={`size-[32px] rounded-[99px] ${getButtonStyle(style)} ${disabled && "opacity-40 pointer-events-none"}`}
             onClick={onClick}
         >
-            <div className="text-white">{children}</div>
+            <div className="text-white flex items-center justify-center">{children}</div>
         </button>
     )
 };
