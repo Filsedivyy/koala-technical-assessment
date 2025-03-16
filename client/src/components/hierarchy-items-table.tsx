@@ -1,13 +1,15 @@
 import React from 'react';
-import { CharacterData } from '../types';
 import HierarchyItemRow from './hierarchy-item-row';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/store';
 
 interface HierarchyItemsTableProps {
-    data: CharacterData;
-    onDelete: (id: string) => void;
 }
 
-const HierarchyItemsTable: React.FC<HierarchyItemsTableProps> = ({ data, onDelete }) => {
+const HierarchyItemsTable: React.FC<HierarchyItemsTableProps> = ({ }) => {
+    const items = useSelector((state: RootState) => state.hierarchy.items);
+
+
     return (
         <div className="w-full border border-gray-300">
             <table className="w-full border-collapse">
@@ -28,8 +30,8 @@ const HierarchyItemsTable: React.FC<HierarchyItemsTableProps> = ({ data, onDelet
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((character) => (
-                        <HierarchyItemRow key={character.data.ID} data={character} onDelete={onDelete} />
+                    {items.map((character) => (
+                        <HierarchyItemRow key={character.data.ID} data={character} />
                     ))}
                 </tbody>
             </table>

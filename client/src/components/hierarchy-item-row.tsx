@@ -3,15 +3,17 @@ import { CharacterRecord } from '../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonStyle } from './button';
+import { useDispatch } from 'react-redux';
+import { removeItem } from '../state/hierarchy-slice';
 
 interface HierarchyItemRowProps {
     data: CharacterRecord;
-    onDelete: (id: string) => void;
 }
 
-const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) => {
+const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data }) => {
     const [isVisibleCharacter, setIsVisibleCharacter] = useState(false);
     const [isVisibleNemesis, setIsVisibleNemesis] = useState<boolean[]>([]);
+    const dispatch = useDispatch();
 
     // Function to toggle the visibility of the main row
     function toggleVisibilityCharacter() {
@@ -28,11 +30,12 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
         setIsVisibleNemesis(newVisibility);
     }
 
-    // Handle delete button click
-    function handleDelete(e: React.MouseEvent, id: string) {
-        e.stopPropagation(); // Prevent row from expanding/collapsing when clicking delete
-        onDelete(id);
-    }
+    //Handle delete row and its children
+    const handleDelete = (e: React.MouseEvent, rowId: string) => {
+        e.stopPropagation();
+        dispatch(removeItem(rowId));
+    };
+
 
     return (
         <div className="p-4 border-b">

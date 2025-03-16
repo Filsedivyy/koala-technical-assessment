@@ -9,7 +9,7 @@ const App = () => {
 
   return (
     <div className="px-6">
-      <HierarchyItemsTable data={[]} onDelete={() => { }} />
+      <HierarchyItemsTable />
     </div>
   )
 };
