@@ -30,10 +30,10 @@ const TableRow: FC<TableRowProps> = ({ data, onDelete, onExpand, isExpanded }) =
                         )}
                         {/* Data Cells */}
                         {Object.values(data).map((value, index) => (
-                            <td key={index} className="p-[4px]">{value}</td>
+                            <td key={index} className="p-2">{value}</td>
                         ))}
                         {/* Delete Button */}
-                        <td className="p-[4px]">
+                        <td className="p-2">
                             <Button onClick={onDelete} style={ButtonStyle.RED}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="size-[16px]" />
                             </Button>
