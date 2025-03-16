@@ -7,12 +7,13 @@ export enum ButtonStyle {
 
 interface ButtonProps {
     children: ReactNode;
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onClick?: () => void;
     style: ButtonStyle;
+    disabled?: boolean
 };
 
 
-const Button: FC<ButtonProps> = ({ children, onClick, style }) => {
+const Button: FC<ButtonProps> = ({ children, onClick, style, disabled }) => {
 
     function getButtonStyle(style: ButtonStyle) {
         switch (style) {
@@ -27,7 +28,7 @@ const Button: FC<ButtonProps> = ({ children, onClick, style }) => {
 
     return (
         <button
-            className={`size-[32px] rounded-[99px] ${getButtonStyle(style)}`}
+            className={`size-[32px] rounded-[99px] ${disabled && "opacity-20 pointer-events-none"} ${getButtonStyle(style)}`}
             onClick={onClick}
         >
             <div className="text-white flex items-center justify-center">{children}</div>

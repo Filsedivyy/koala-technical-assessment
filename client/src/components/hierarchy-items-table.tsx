@@ -1,35 +1,34 @@
-import React from 'react';
-import HierarchyItemRow from './hierarchy-item-row';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
+import HierarchyItemRow from "./hierarchy-item-row";
+import { useSelector } from "react-redux";
+import { RootState } from "../state/store";
+import { Character } from "../types";
 
-interface HierarchyItemsTableProps { }
 
-const HierarchyItemsTable: React.FC<HierarchyItemsTableProps> = () => {
+
+const HierarchyItemsTable = () => {
     const rows = useSelector((state: RootState) => state.hierarchy.items);
+    const headers: (keyof Character)[] = [
+        "ID", "Name", "Gender", "Ability", "Minimal distance", "Weight", "Born", "In space since", "Beer consumption (l/y)", "Knows the answer?"
+    ];
+
+    const TableHeader = (label: string) => {
+        return (
+            <th scope="col" className="px-4 py-2" key={label}>{label}</th>
+        );
+    }
 
     return (
-        <div className="w-full border border-gray-300">
-            <table className="w-full border-collapse">
+        <div className="w-full overflow-x-auto shadow-lg border border-gray-300 rounded-lg">
+            <table className="min-w-full table-auto">
                 <thead>
-                    <tr className="bg-gray-200">
-                        <th className="p-2">ID</th>
-                        <th className="p-2">Name</th>
-                        <th className="p-2">Gender</th>
-                        <th className="p-2">Ability</th>
-                        <th className="p-2">Minimal Distance</th>
-                        <th className="p-2">Weight</th>
-                        <th className="p-2">Born</th>
-                        <th className="p-2">In Space Since</th>
-                        <th className="p-2">Beer Consumption (l/y)</th>
-                        <th className="p-2">Knows the Answer?</th>
-                        <th className="p-2">Actions</th>
+                    <tr className="bg-gray-100 text-left text-sm font-semibold text-gray-700">
+                        {headers.map(header => TableHeader(header))}
                     </tr>
                 </thead>
                 <tbody>
                     {rows.length == 0 ? (
                         <tr>
-                            <td colSpan={11} className="p-4 text-center text-gray-500">
+                            <td colSpan={11} className="px-4 py-2 text-center text-gray-500">
                                 No items available.
                             </td>
                         </tr>
