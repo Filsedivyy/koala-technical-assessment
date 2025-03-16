@@ -9,7 +9,6 @@ interface HierarchyItemRowProps {
     onDelete: (id: string) => void;
 }
 
-
 const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) => {
     const [isVisibleCharacter, setIsVisibleCharacter] = useState(false);
     const [isVisibleNemesis, setIsVisibleNemesis] = useState<boolean[]>([]);
@@ -29,11 +28,16 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
         setIsVisibleNemesis(newVisibility);
     }
 
+    // Handle delete button click
+    function handleDelete(e: React.MouseEvent, id: string) {
+        e.stopPropagation(); // Prevent row from expanding/collapsing when clicking delete
+        onDelete(id);
+    }
 
     return (
         <div className="p-4 border-b">
             <table className="w-full border border-gray-300">
-                <tbody>
+                <tbody onClick={toggleVisibilityCharacter}>
                     <tr>
                         <td className="p-4">
                             <Button
@@ -42,17 +46,17 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
                                 disabled={data.children.has_nemesis ? false : true} // Cannot expand if no character data
                             >
                                 {isVisibleCharacter ? (
-                                    <FontAwesomeIcon icon={faChevronUp} className="h-5 w-5" />
+                                    <FontAwesomeIcon icon={faChevronUp} className="size-[20px]" />
                                 ) : (
-                                    <FontAwesomeIcon icon={faChevronDown} className="h-5 w-5" />
+                                    <FontAwesomeIcon icon={faChevronDown} className="size-[20px]" />
                                 )}
                             </Button>
                         </td>
                         {Object.values(data.data).map((value, index) => (
-                            <td key={index} className="p-2">{value}</td>
+                            <td key={index} className="p-[4px]">{value}</td>
                         ))}
-                        <td className="p-4">
-                            <Button onClick={() => onDelete(data.data.ID)} style={ButtonStyle.RED}>
+                        <td className="p-[4px]">
+                            <Button onClick={(e) => handleDelete(e, data.data.ID)} style={ButtonStyle.RED}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="size-[16px]" />
                             </Button>
                         </td>
@@ -62,7 +66,7 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
             {isVisibleCharacter && data.children?.has_nemesis?.records.map((nemesisRecord, index) => (
                 <div key={nemesisRecord.data.ID} className="ml-6">
                     <table className="w-full border border-gray-300">
-                        <tbody>
+                        <tbody onClick={() => toggleVisibilityNemesis(index)}>
                             <tr>
                                 <td className="p-4">
                                     <Button
@@ -81,7 +85,7 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
                                     <td key={index} className="p-2">{value}</td>
                                 ))}
                                 <td className="p-4">
-                                    <Button onClick={() => onDelete(nemesisRecord.data.ID)} style={ButtonStyle.RED}>
+                                    <Button onClick={(e) => handleDelete(e, nemesisRecord.data.ID)} style={ButtonStyle.RED}>
                                         <FontAwesomeIcon icon={faTrashAlt} className="size-[16px]" />
                                     </Button>
                                 </td>
@@ -98,7 +102,7 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data, onDelete }) =
                                             <td key={index} className="p-2">{value}</td>
                                         ))}
                                         <td className="p-4">
-                                            <Button onClick={() => onDelete(secreteRecord.data.ID)} style={ButtonStyle.RED}>
+                                            <Button onClick={(e) => handleDelete(e, secreteRecord.data.ID)} style={ButtonStyle.RED}>
                                                 <FontAwesomeIcon icon={faTrashAlt} className="size-[16px]" />
                                             </Button>
                                         </td>
