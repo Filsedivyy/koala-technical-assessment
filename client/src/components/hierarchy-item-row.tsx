@@ -20,25 +20,21 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data }) => {
     const dispatch = useDispatch();
 
     function handleDeleteRecord(recordId: string, type: "nemesis" | "secrete", index?: number) {
-        dispatch(removeItem(recordId)); // UPDATE data via REDUX
+        dispatch(removeItem(recordId));
 
-        if (type == "nemesis" && index != undefined) {
-            // COPIES previous state of nemeses and marks the specific nemesis as deleted
+        if (type === "nemesis" && index !== undefined) {
             setChildDeleted((prevState) => {
                 const newNemeses = [...prevState.nemeses];
                 newNemeses[index] = true;
                 return { ...prevState, nemeses: newNemeses };
             });
-        }
-        else if (type == "secrete") {
+        } else if (type === "secrete") {
             setChildDeleted((prevState) => {
-                // COPIES previous state of secretes and adds a new deleted secrete
-                const newSecretes = [...prevState.secretes];
-                newSecretes.push(true);
+                const newSecretes = [...prevState.secretes, true];
                 return { ...prevState, secretes: newSecretes };
             });
         }
-    };
+    }
 
     function toggleVisibilityCharacter() {
         if (data.children?.has_nemesis) {
@@ -51,69 +47,47 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data }) => {
                 }));
             }
         }
-    };
+    }
 
     function toggleVisibilityNemesis(index: number) {
         const newVisibility = [...visibility.nemeses];
         const nemesisRecord = data.children?.has_nemesis?.records[index];
 
         if (nemesisRecord && nemesisRecord.children?.has_secrete) {
-            if (nemesisRecord.children.has_secrete.records.length === 0) {
-                newVisibility[index] = false;
-            } else {
-                newVisibility[index] = !newVisibility[index];
-            }
+            newVisibility[index] = nemesisRecord.children.has_secrete.records.length !== 0 ? !newVisibility[index] : false;
             setVisibility((prevState) => ({
                 ...prevState,
                 nemeses: newVisibility,
             }));
         }
-    };
+    }
 
     const nemesisRecords = useMemo(() => data.children?.has_nemesis?.records || [], [data]);
-
-    const allChildrenDeleted = nemesisRecords.every((_, index) => childDeleted.nemeses[index]);
-
-    function isNemesisDeleted(index: number) {
-        const nemesisRecord = data.children?.has_nemesis?.records[index];
-        if (nemesisRecord && nemesisRecord.children?.has_secrete) {
-            return nemesisRecord.children.has_secrete.records.every((_, secretIndex) => childDeleted.secretes[secretIndex]);
-        }
-        return false;
-    };
-
     return (
         <div className="p-4 border-b">
-            {/*CHARACTER ROW */}
             <TableRow
                 data={data.data}
                 onExpand={toggleVisibilityCharacter}
                 isExpanded={visibility.character}
                 onDelete={() => handleDeleteRecord(data.data.ID, "nemesis")}
-                disabled={allChildrenDeleted}
             />
             {visibility.character &&
                 nemesisRecords.map((nemesisRecord, index) => {
-                    const allSecretesDeleted = isNemesisDeleted(index);
                     return (
                         <div key={nemesisRecord.data.ID} className="ml-6">
-                            {/*NEMESIS ROWS */}
                             <TableRow
                                 data={nemesisRecord.data}
                                 onExpand={() => toggleVisibilityNemesis(index)}
                                 isExpanded={visibility.nemeses[index]}
                                 onDelete={() => handleDeleteRecord(nemesisRecord.data.ID, "nemesis", index)}
-                                disabled={childDeleted.nemeses[index] || allSecretesDeleted}
                             />
                             {visibility.nemeses[index] &&
-                                nemesisRecord.children?.has_secrete?.records.map((secreteRecord, secretIndex) => (
+                                nemesisRecord.children?.has_secrete?.records.map((secreteRecord) => (
                                     <div key={secreteRecord.data.ID} className="ml-12">
-                                        {/*SECRETE ROWS */}
                                         <TableRow
                                             onDelete={() => handleDeleteRecord(secreteRecord.data.ID, "secrete")}
                                             data={secreteRecord.data}
                                             isExpanded={false}
-                                            disabled={childDeleted.secretes[secretIndex]}
                                         />
                                     </div>
                                 ))}
@@ -125,7 +99,6 @@ const HierarchyItemRow: React.FC<HierarchyItemRowProps> = ({ data }) => {
 };
 
 export default HierarchyItemRow;
-
 
 
 

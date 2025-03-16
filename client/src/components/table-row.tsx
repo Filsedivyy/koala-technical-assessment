@@ -8,20 +8,18 @@ interface TableRowProps {
     onDelete: () => void;
     onExpand?: () => void;
     isExpanded: boolean;
-    disabled?: boolean
 }
 
-const TableRow: FC<TableRowProps> = ({ data, onDelete, onExpand, isExpanded, disabled }) => {
+const TableRow: FC<TableRowProps> = ({ data, onDelete, onExpand, isExpanded }) => {
     return (
         <div className="p-4 border-b">
             <table className="w-full border border-gray-300">
-                <tbody onClick={!disabled && onExpand}>
-                    <tr className={`${onExpand && !disabled && "hover:bg-slate-200 active:bg-slate-300"}`}>
+                <tbody onClick={onExpand}>
+                    <tr className={`${onExpand && "hover:bg-slate-200 active:bg-slate-300"}`}>
                         {/* Expand Button */}
                         {onExpand && (
                             <td className="p-4">
                                 <Button style={ButtonStyle.BLUE}
-                                    disabled={disabled}
                                 >
                                     {isExpanded ? (
                                         <FontAwesomeIcon icon={faChevronUp} className="size-[20px]" />
