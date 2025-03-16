@@ -9,11 +9,10 @@ interface ButtonProps {
     children: ReactNode;
     onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
     style: ButtonStyle;
-    disabled?: boolean
 };
 
 
-const Button: FC<ButtonProps> = ({ children, onClick, style, disabled }) => {
+const Button: FC<ButtonProps> = ({ children, onClick, style }) => {
 
     function getButtonStyle(style: ButtonStyle) {
         switch (style) {
@@ -28,7 +27,7 @@ const Button: FC<ButtonProps> = ({ children, onClick, style, disabled }) => {
 
     return (
         <button
-            className={`size-[32px] rounded-[99px] ${getButtonStyle(style)} ${disabled && "opacity-40 pointer-events-none"}`}
+            className={`size-[32px] rounded-[99px] ${getButtonStyle(style)}`}
             onClick={onClick}
         >
             <div className="text-white flex items-center justify-center">{children}</div>

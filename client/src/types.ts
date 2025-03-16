@@ -26,23 +26,27 @@ export interface Secrete {
 
 export interface Children {
     has_nemesis?: {
-        records: {
-            data: Nemesis;
-            children: {
-                has_secrete?: {
-                    records: {
-                        data: Secrete;
-                        children: {};
-                    }[];
-                };
-            };
-        }[];
+        records: NemesisRecord[];
     };
+}
+
+export interface NemesisRecord {
+    data: Nemesis;
+    children?: {
+        has_secrete?: {
+            records: SecreteRecord[];
+        };
+    };
+}
+
+export interface SecreteRecord {
+    data: Secrete;
+    children?: {};
 }
 
 export interface CharacterRecord {
     data: Character;
-    children: Children;
+    children?: Children;
 }
 
 export type CharacterData = CharacterRecord[];

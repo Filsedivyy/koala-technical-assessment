@@ -29,8 +29,6 @@ const initialState = {
 const deleteItem = (items: CharacterData, idToDelete: string) => {
     return items.filter((item) => {
         if (item.data.ID === idToDelete) return false;
-        console.log(item.data.ID)
-        console.log(idToDelete)
         if (item.children) {
             for (const key in item.children) {
                 item.children[key].records = deleteItem(item.children[key].records, idToDelete);
